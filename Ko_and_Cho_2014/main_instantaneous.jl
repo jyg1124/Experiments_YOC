@@ -1,5 +1,4 @@
 using PyPlot
-using Debug
 
 const ITERATION = 5000
 # For plotting
