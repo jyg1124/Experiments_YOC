@@ -19,5 +19,5 @@ end
 for i in 1:5
   plot_arrival_process(100)
 end
-
+plt.savefig("(p449, problem 74) FSLLN.pdf")
 show()
