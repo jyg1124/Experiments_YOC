@@ -1,7 +1,7 @@
 using Distributions
 using Plots
 pyplot()
-# f = open("sim_record.txt" , "w")
+f = open("sim_record.txt" , "w")
 # f2 = open("departure_process.txt.","w")
 
 const λ = 1.0
@@ -92,15 +92,15 @@ function plot_sample_paths(k::Int64, n::Int64, t::Float64) # k: number of paths,
   # plot!(xlims = (0, TIME), ylims = (-10,10))
   for i in 1:k
     (x,y) = (Float64[],Float64[])
-    departure_time = run_simulation(TIME*n)
-    save_diffusion_scaled_process_points!(x, y, departure_time, TIME, n)
+    departure_time = run_simulation(t*n)
+    save_diffusion_scaled_process_points!(x, y, departure_time, t, n)
     plot!(x,y)
   end
   gui()
-  savefig("(p485, problem 81) FCLT.pdf")
+  savefig("(p485, problem 81) FCLT GG1 departure process.pdf")
 end
 
-plot_sample_paths(3,10,10.0)
+plot_sample_paths( 3 , 100, 10.0)
 
-# close(f)
+ close(f)
 # close(f2)
