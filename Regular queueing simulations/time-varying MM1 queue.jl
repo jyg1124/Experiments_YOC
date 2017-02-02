@@ -136,15 +136,15 @@ sample_path = run_simulation(100.0)
 
 # plotting X(t) process
 plt.step(sample_path.event_times,sample_path.number_in_system)
-
-println("Amount of time that the servier is on break: $(sample_path.server_vacation_time)")
+plt.savefig("time-varying MM1 queue.pdf")
+println("Amount of time that the server is on break: $(sample_path.server_vacation_time)")
 
 function do_replication(n::Int64)
   cusum = 0.0
   for i in 1:n
     cusum += run_simulation(100.0).server_vacation_time
   end
-  println("Expected amount of time that the servier is on break: $(cusum/n)")
+  println("Expected amount of time that the server is on break: $(cusum/n)")
 end
 
 do_replication(500)
