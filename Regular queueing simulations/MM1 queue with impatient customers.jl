@@ -150,7 +150,7 @@ close(f)
 # plotting X(t) process
 
 plt.step(sample_path._event_times,sample_path._number_in_system)
-plt.xlim(0.0,100.0)
+plt.xlim(0.0,10.0)
 plt.savefig("MM1 queue with impatient customers.pdf")
 function do_replication(n::Int64)
   cusum = 0.0
