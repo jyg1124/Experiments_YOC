@@ -96,7 +96,7 @@ end
 # Parameters for generating synthetic data
 mean = [[2.0, 6.0] , [7.0, 9.0] , [9.0, 3.0] , [5.0, 5.0]]
 covariance = [[1 1.5;1.5 3] , [3 1;1 1] , [2 1;1 1] , [2 0.5;0.5 2]]
-D = 200 # the number of data points generated from a parameter set (μ_i,Σ_i)
+D = 100 # the number of data points generated from a parameter set (μ_i,Σ_i)
 
 # Model parameters
 K = 4 # the number of clusters
