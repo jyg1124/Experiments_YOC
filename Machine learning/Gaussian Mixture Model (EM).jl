@@ -101,7 +101,7 @@ D = 100 # the number of data points generated from a parameter set (μ_i,Σ_i)
 # Model parameters
 K = 4                                                                 # the number of clusters
 X = [rand(MvNormal(mean[i],covariance[i]),D) for i in 1:length(mean)] # generating random data points
-X = hcat(X...)                                                        # converting the container type (vector to array). working exactly like cat(2,gmm.X)
+X = hcat(X...)                                                        # converting the container type (array to matrix). working exactly like cat(2,gmm.X)
 N = length(X[1,:])
 μ = Array{Vector{Float64}}(K)
 Σ = Array{Array{Float64,2}}(K)
