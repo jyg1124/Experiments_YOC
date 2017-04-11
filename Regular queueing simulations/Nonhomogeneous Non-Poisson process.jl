@@ -8,7 +8,8 @@ a = 4.0; b = -3.0; c = 1000.0
 λ(t) = a + b*sin((π/c)*t)
 R(s,x) = a*(x-s)+((b*c)/π)*( cos(((π*s)/c))-cos(((π*x)/c)) ) # Note that R(0.0,x) = R(x)
 
-function inverse_integrated_rate_function(f::Function, s::Float64, val::Float64)  # f: integrated rate function, s: starting point
+
+function inverse_integrated_rate_function(f::Function, s::Float64, val::Float64)  # f: integrated rate function (obtained by hand), s: starting point
     return fzero(x -> f(s,x)-val , s)
 end
 
