@@ -1,14 +1,18 @@
+# Written by Yongkyu Cho.
+# Reference: Transforming renewal processes for simulation of nonstationary arrival processes, Gerhardt and Nelson, INFORMS Journal on Computing
+# I use the inversion method.
+
 using Distributions, PyPlot, Roots, JuMP, Ipopt
 
 a = 4.0; b = -3.0; c = 1000.0
 λ(t) = a + b*sin((π/c)*t)
-R(s,x) = a*(x-s)+((b*c)/π)*( cos(((π*s)/c))-cos(((π*x)/c)) )
+R(s,x) = a*(x-s)+((b*c)/π)*( cos(((π*s)/c))-cos(((π*x)/c)) ) # Note that R(0.0,x) = R(x)
 
 function inverse_integrated_rate_function(f::Function, s::Float64, val::Float64)  # f: integrated rate function, s: starting point
     return fzero(x -> f(s,x)-val , s)
 end
 
-function inverse_integrated_function(f::Function, val::Float64)
+function inverse_integrated_function(f::Function, val::Float64) # Numerically calculating the inverse of the integrated function
   x = 0.0
   while quadgk(f,0.0,x)[1] < val
     x += 0.00001
@@ -16,9 +20,9 @@ function inverse_integrated_function(f::Function, val::Float64)
   return x
 end
 
-function generate_NHWP(R::Function, Θ::Float64, α::Float64, N::Int64) # non-homogeneous Weibull process
+function generate_NHWP(R::Function, Θ::Float64, α::Float64, N::Int64) # non-homogeneous Weibull process until N arrivals
   n = 1
-  S = inverse_integrated_function(x->2*e^(-sqrt(2x)),rand())
+  S = inverse_integrated_function(x->2*e^(-sqrt(2x)),rand()) # first sample from the Stationary Excess distribution
   V = [inverse_integrated_rate_function(R,0.0,S)]
   while n < N
     push!(V, inverse_integrated_rate_function(R,V[n],rand(Weibull(Θ,α))) )
@@ -27,7 +31,7 @@ function generate_NHWP(R::Function, Θ::Float64, α::Float64, N::Int64) # non-ho
   return V
 end
 
-function generate_NHWP(R::Function, Θ::Float64, α::Float64, T::Float64) # non-homogeneous Weibull process
+function generate_NHWP(R::Function, Θ::Float64, α::Float64, T::Float64) # non-homogeneous Weibull process until T times
   n = 1
   S = inverse_integrated_function( x->2*e^(-sqrt(2*x)) , rand())
   V = [inverse_integrated_rate_function(R,0.0,S)]
@@ -78,8 +82,9 @@ function generate_NHPP(λ::Function, N::Int64)
   return x
 end
 
+# plotting for verification
 plt = PyPlot
-range = 500.0
+range = 5000.0
 for k in 1:1
   x = generate_NHWP(R,0.5,0.5,range)
   y = [1]
