@@ -102,3 +102,4 @@ for k in 1:1
   plt.step(x,y)
 end
 plt.legend(["NHWP","NHPP"])
+plt.savefig("Nonhomogeneous Non-Poisson process.pdf")
