@@ -1,6 +1,6 @@
 # Written by Yongkyu Cho.
 # Reference: Transforming renewal processes for simulation of nonstationary arrival processes, Gerhardt and Nelson (2009), INFORMS Journal on Computing
-# I use the inversion method.
+# I use the inversion method with Weibull(0.5,0.5) base distribution.
 
 using Distributions, PyPlot, Roots, JuMP, Ipopt
 
