@@ -54,18 +54,19 @@ function BM_to_RBM(BM_path::Array{Float64})
   return RBM_path
 end
 
-BM_path = sampleBM(6.0,-0.01,0.09,1000)
+n = 1000 
+BM_path = sampleBM(6.0,-0.01,0.09,n)
 #RBM_path = sampleRBM(6.0,-0.01,0.09,1000)
 RBM_path = BM_to_RBM(BM_path)
 
 x_axis = Float64[]
-for i in 1:1000
+for i in 1:n
   push!(x_axis, 0.0)
 end
 
 plt = PyPlot
 #plt.subplot(2,1,1)
-plt.xticks(0:100:1000)
+#plt.xticks(0:100:1000)
 
 plt.plot(BM_path)
 plt.plot(RBM_path)
