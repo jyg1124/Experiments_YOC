@@ -1,4 +1,4 @@
-# This code is written by Yongkyu Cho.
+# Written by Yongkyu Cho.
 # Reference: Bishop - Pattern Recognition and Machine Learning
 
 using Distributions, PyPlot
