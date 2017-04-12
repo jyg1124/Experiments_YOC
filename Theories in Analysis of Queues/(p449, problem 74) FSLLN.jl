@@ -1,3 +1,5 @@
+# Written by Yongkyu Cho.
+
 using Distributions
 using Plots
 pyplot()
