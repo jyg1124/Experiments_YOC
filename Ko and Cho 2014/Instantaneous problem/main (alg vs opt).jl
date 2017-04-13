@@ -18,7 +18,6 @@ for j in 1:length(SS)
 end
 ## Set objective function
 @NLobjective(m, Min, sum(SS[j].K + SS[j].α*x[j]^SS[j].n for j in 1:length(SS)))
-#@NLobjective(m, Min, 150+250+220+150+300+350+220+350+400+700+0.3333*x[1]^3+0.2*x[2]^3+x[3]^3+0.6667*x[4]^3+0.8*x[5]^3+0.4*x[6]^3+0.4286*x[7]^3+0.5*x[8]^3+0.6*x[9]^3+0.4444*x[10]^3)
 
 ## Add constraints
 for j in 1:length(SS)
