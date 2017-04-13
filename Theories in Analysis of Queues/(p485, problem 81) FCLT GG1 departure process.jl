@@ -1,5 +1,5 @@
 # Written by Yongkyu Cho.
-# Reference: Analysis of Queues (2012), Natarajan Gautam.
+# Reference: Analysis of Queues, Natarajan Gautam.
 
 using Distributions
 using Plots
