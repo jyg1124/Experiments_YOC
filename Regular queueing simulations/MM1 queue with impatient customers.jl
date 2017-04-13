@@ -1,4 +1,5 @@
 # Written by Yongkyu Cho.
+# Reference: Simulation, Sheldon M. Ross.
 
 using PyPlot
 using Distributions
