@@ -1,3 +1,6 @@
+# Written by Yongkyu Cho.
+# Reference: Analysis of Queues, Natarajan Gautam.
+
 using Distributions
 
 C=10.0
