@@ -1,5 +1,5 @@
 # Written by Yongkyu Cho.
-# Reference: Bishop - Pattern Recognition and Machine Learning
+# Reference: Pattern Recognition and Machine Learning, Christopher Bishop.
 
 using Distributions, PyPlot
 
