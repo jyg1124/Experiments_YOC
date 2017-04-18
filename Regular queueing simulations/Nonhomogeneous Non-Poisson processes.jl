@@ -1,7 +1,7 @@
 # Written by Yongkyu Cho.
 # Reference: Transforming renewal processes for simulation of nonstationary arrival processes, Gerhardt and Nelson (2009), INFORMS Journal on Computing.
 
-using Distributions, PyPlot, JuMP, Ipopt, Plots, Roots
+using Distributions, PyPlot, Roots, JuMP, Ipopt
 
 a = 4.0
 b = -3.0
@@ -45,7 +45,7 @@ end
 
 function generate_NHPP(λ::Function, T::Float64)
   m = Model(solver = IpoptSolver(print_level = 0))
-  JuMP.registerNLFunction(m, :λ, 1, λ, autodiff=true)
+  JuMP.register(m, :λ, 1, λ, autodiff=true)
   @variable(m, t)
   @NLobjective(m, Max, λ(t))
   solve(m)
@@ -134,6 +134,6 @@ for k in 1:1
 end
 
 
-plt.legend(["Poisson","Gamma","Weibull","Pareto","Lognormal"])
-plt.savefig("Nonhomogeneous Non-Poisson processes.pdf")
+plt.legend(["Exponential","Gamma","Weibull","Pareto","Lognormal"])
+#plt.savefig("Nonhomogeneous Non-Poisson processes.pdf")
 
