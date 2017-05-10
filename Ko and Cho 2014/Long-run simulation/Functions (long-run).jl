@@ -6,7 +6,7 @@ module Functions
   export server_creater, server_setter, arrival_generator, workload_setter,
         update_buffer, generate_NHPP, run_to_end, warm_up, next_event,
         find_min_price_server, p_dot, x_dot, server_power_2nd_diff, server_power_1st_diff,
-        server_power, subinterval_setter, stationary_arrival_generator
+        server_power, subinterval_setter
 
   # function definitions
   function subinterval_setter(N::Int64, WS::Array{Workload_Setting}) # n: the number of intervals
@@ -279,14 +279,16 @@ module Functions
 
   function warm_up(vdc::VirtualDataCenter, PI::Plot_Information, WARM_UP_TIME::Float64)
     println(PI.file_sim_record, "Warming up for $(WARM_UP_TIME) times.")
+#    println("Warming up for $(WARM_UP_TIME) times.")
     while vdc.current_time < WARM_UP_TIME
       next_event(vdc, PI)
     end
     vdc.warmed_up = true
     println(PI.file_sim_record, "Warmed up.")
+#    println("Warmed up.")
   end
-
-  function warm_up(vdc::VirtualDataCenter, PI::Plot_Information, WARM_UP_ARRIVALS::Int64)
+#=
+  function warm_up(vdc::VirtualDataCenter, PI::Plot_Information, MAX_ARRIVALS::Int64)
     println(PI.file_sim_record, "Warming up for $(WARM_UP_ARRIVALS) arrivals.")
     while vdc.passed_arrivals < WARM_UP_ARRIVALS
       next_event(vdc, PI)
@@ -294,7 +296,7 @@ module Functions
     vdc.warmed_up = true
     println(PI.file_sim_record, "Warmed up.")
   end
-
+=#
   function run_to_end(vdc::VirtualDataCenter, PI::Plot_Information, REPLICATION_TIME::Float64, WARM_UP_TIME::Float64)
     if !vdc.warmed_up
       warm_up(vdc,PI,WARM_UP_TIME)
@@ -302,9 +304,10 @@ module Functions
     while vdc.current_time < REPLICATION_TIME
       next_event(vdc, PI)
     end
+#    println(PI.file_sim_record, "Simulation finished")
     println(PI.file_sim_record, "Simulation finished")
   end
-
+#=
   function run_to_end(vdc::VirtualDataCenter, PI::Plot_Information, MAX_ARRIVALS::Int64, WARM_UP_ARRIVALS::Int64)
     if !vdc.warmed_up
       warm_up(vdc,PI,WARM_UP_ARRIVALS)
@@ -314,7 +317,7 @@ module Functions
     end
     println(PI.file_sim_record, "Simulation finished")
   end
-
+=#
   function generate_NHPP(f::Function, T::Float64)
     m = Model(solver = IpoptSolver(print_level = 0))
     JuMP.registerNLFunction(m, :λ, 1, f, autodiff=true)
@@ -332,7 +335,7 @@ module Functions
     end
     return x
   end
-
+#=
   function generate_NHPP(f::Function, N::Int64)
     m = Model(solver = IpoptSolver(print_level = 0))
     JuMP.registerNLFunction(m, :λ, 1, f, autodiff=true)
@@ -352,23 +355,30 @@ module Functions
     end
     return x
   end
+=#
 
-
-  function workload_setter(time_varying::Bool)
+  function workload_setter()
     WS = Workload_Setting[]
-    if time_varying == true
-      push!(WS, Workload_Setting(20.0, "Exponential", 0.25, t -> 4.0-3*sin((π/1000)*t), 1000, 1.0, 0.25,"LogNormal",5.0, 1.5, 5.0*sqrt(1.5)    ) )
-      push!(WS, Workload_Setting(20.0, "Exponential", 0.5, t -> 2.0-1.5*sin((π/1000)*t), 1000, 1.0, 0.5, "LogNormal", 10.0, 2.0, 10.0*sqrt(2.0)    ) )
-      push!(WS, Workload_Setting(20.0, "Exponential", 0.25, t -> 4.0-2.5*sin((π/1000)*t), 1000, 1.0, 0.25, "LogNormal", 5.0, 1.0, 5.0*sqrt(1.0)    ) )
-      push!(WS, Workload_Setting(20.0, "Exponential", 0.1, t -> 10.0-5*sin((π/1000)*t), 1000, 1.0, 0.1, "LogNormal", 2.0, 0.8, 2.0*sqrt(0.8)    ) )
-      push!(WS, Workload_Setting(15.0, "Exponential", 0.2, t -> 5.0-4*sin((π/1000)*t), 1000, 1.0, 0.2,"LogNormal", 3.0,0.5, 3.0*sqrt(0.5)    ) )
-    else
-      push!(WS, Workload_Setting(20.0, "LogNormal", 0.25, t -> 4.0-3*sin((π/1000)*t), 1000, 1.0, 0.25,"LogNormal",5.0, 1.5, 5.0*sqrt(1.5)    ) )
-      push!(WS, Workload_Setting(20.0, "LogNormal", 0.5, t -> 2.0-1.5*sin((π/1000)*t), 1000, 1.0, 0.5, "LogNormal", 10.0, 2.0, 10.0*sqrt(2.0)    ) )
-      push!(WS, Workload_Setting(20.0, "Exponential", 0.25, t -> 4.0-2.5*sin((π/1000)*t), 1000, 1.0, 0.25, "LogNormal", 5.0, 1.0, 5.0*sqrt(1.0)    ) )
-      push!(WS, Workload_Setting(20.0, "LogNormal", 0.1, t -> 10.0-5*sin((π/1000)*t), 1000, 1.0, 0.1, "LogNormal", 2.0, 0.8, 2.0*sqrt(0.8)    ) )
-      push!(WS, Workload_Setting(15.0, "LogNormal", 0.2, t -> 5.0-4*sin((π/1000)*t), 1000, 1.0, 0.2,"LogNormal", 3.0,0.5, 3.0*sqrt(0.5)    ) )
-    end
+    #=
+    push!(WS, Workload_Setting(20.0, "Exponential",0.25, t -> 4.0-3*sin((π/86400)*t), 86400, 1.0, sqrt(0.25),"LogNormal",5.0,1.5,sqrt((5.0^2)*1.5)))
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.5, t -> 2.0-1.5*sin((π/86400)*t), 86400, 1.0, sqrt(0.5), "LogNormal", 10.0, 2.0, sqrt((10.0^2)*2.0)))
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.25, t -> 4.0-2.5*sin((π/86400)*t), 86400, 1.0, sqrt(0.25), "LogNormal", 5.0, 1.0, sqrt((5.0^2)*1.0)))
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.1, t -> 10.0-5*sin((π/86400)*t), 86400, 1.0, sqrt(0.1), "LogNormal", 2.0, 0.8, sqrt((2.0^2)*0.8)))
+    push!(WS, Workload_Setting(15.0, "Exponential", 0.2, t -> 5.0-4*sin((π/86400)*t), 86400, 1.0, sqrt(0.2),"LogNormal", 3.0,0.5,sqrt((3.0^2)*0.5)))
+    =#
+#=
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.25, t -> 4.0-3*sin((π/1000)*t), 1000, 1.0, sqrt(0.25),"LogNormal",5.0,1.5,sqrt((5.0^2)*1.5)))
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.5, t -> 2.0-1.5*sin((π/1000)*t), 1000, 1.0, sqrt(0.5), "LogNormal", 10.0, 2.0, sqrt((10.0^2)*2.0)))
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.25, t -> 4.0-2.5*sin((π/1000)*t), 1000, 1.0, sqrt(0.25), "LogNormal", 5.0, 1.0, sqrt((5.0^2)*1.0)))
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.1, t -> 10.0-5*sin((π/1000)*t), 1000, 1.0, sqrt(0.1), "LogNormal", 2.0, 0.8, sqrt((2.0^2)*0.8)))
+    push!(WS, Workload_Setting(15.0, "Exponential", 0.2, t -> 5.0-4*sin((π/1000)*t), 1000, 1.0, sqrt(0.2),"LogNormal", 3.0,0.5,sqrt((3.0^2)*0.5)))
+=#
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.25, t -> 4.0-3*sin((π/1000)*t), 1000, 1.0, 0.25,"LogNormal",5.0, 1.5, 5.0*sqrt(1.5)    ) )
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.5, t -> 2.0-1.5*sin((π/1000)*t), 1000, 1.0, 0.5, "LogNormal", 10.0, 2.0, 10.0*sqrt(2.0)    ) )
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.25, t -> 4.0-2.5*sin((π/1000)*t), 1000, 1.0, 0.25, "LogNormal", 5.0, 1.0, 5.0*sqrt(1.0)    ) )
+    push!(WS, Workload_Setting(20.0, "Exponential", 0.1, t -> 10.0-5*sin((π/1000)*t), 1000, 1.0, 0.1, "LogNormal", 2.0, 0.8, 2.0*sqrt(0.8)    ) )
+    push!(WS, Workload_Setting(15.0, "Exponential", 0.2, t -> 5.0-4*sin((π/1000)*t), 1000, 1.0, 0.2,"LogNormal", 3.0,0.5, 3.0*sqrt(0.5)    ) )
+
     return WS
   end
 
@@ -436,90 +446,6 @@ module Functions
     return AI
   end
 
-  function stationary_arrival_generator(WS::Array{Workload_Setting}, MAX_ARRIVALS::Int64) # condition is either REPLICATION_TIME or MAX_ARRIVALS
-    vector_1 = rand(Distributions.LogNormal(log(0.25),sqrt(log(2+1))), MAX_ARRIVALS+10)
-    vector_2 = rand(Distributions.LogNormal(log(0.5),sqrt(log(1.5+1))), MAX_ARRIVALS+10)
-    vector_3 = rand(Distributions.Exponential(4), MAX_ARRIVALS+10)
-    vector_4 = rand(Distributions.LogNormal(log(0.1),0.1*sqrt(log(1+0.8))), MAX_ARRIVALS+10)
-    vector_5 = rand(Distributions.LogNormal(log(0.2),0.2*sqrt(log(1+2))), MAX_ARRIVALS+10)
-
-    i = 1
-    while i < MAX_ARRIVALS+10
-      vector_1[i+1] = vector_1[i] + vector_1[i+1]
-      vector_2[i+1] = vector_2[i] + vector_2[i+1]
-      vector_3[i+1] = vector_3[i] + vector_3[i+1]
-      vector_4[i+1] = vector_4[i] + vector_4[i+1]
-      vector_5[i+1] = vector_5[i] + vector_5[i+1]
-      i += 1
-    end
-    AI = Arrival_Information[]
-    i = 1
-    while i < MAX_ARRIVALS+10
-      m = min(vector_1[1], vector_2[1], vector_3[1], vector_4[1], vector_5[1])
-      if m == vector_1[1]
-        push!(AI, Arrival_Information(i,1,m,rand(LogNormal(log(5.0),sqrt(log(1+1.5)))),typemax(Float64)))
-        shift!(vector_1)
-      elseif m == vector_2[1]
-        push!(AI, Arrival_Information(i,2,m,rand(LogNormal(log(10.0),sqrt(log(1+2)))),typemax(Float64)))
-        shift!(vector_2)
-      elseif m == vector_3[1]
-        push!(AI, Arrival_Information(i,3,m,rand(LogNormal(log(5.0),sqrt(log(1+1)))),typemax(Float64)))
-        shift!(vector_3)
-      elseif m == vector_4[1]
-        push!(AI, Arrival_Information(i,4,m,rand(LogNormal(log(2.0),sqrt(log(0.8+1)))),typemax(Float64)))
-        shift!(vector_4)
-      else
-        push!(AI, Arrival_Information(i,5,m,rand(LogNormal(log(3.0),sqrt(log(0.5+1)))),typemax(Float64)))
-        shift!(vector_5)
-      end
-      i += 1
-    end
-    return AI
-  end
-
-  function stationary_arrival_generator(WS::Array{Workload_Setting}, REPLICATION_TIME::Float64) # condition is either REPLICATION_TIME or MAX_ARRIVALS
-    vector_1 = rand(Distributions.LogNormal(log(0.25),sqrt(log(2+1))), 1)
-    vector_2 = rand(Distributions.LogNormal(log(0.5),sqrt(log(1.5+1))), 1)
-    vector_3 = rand(Distributions.Exponential(4), 1)
-    vector_4 = rand(Distributions.LogNormal(log(0.1),0.1*sqrt(log(1+0.8))), 1)
-    vector_5 = rand(Distributions.LogNormal(log(0.2),0.2*sqrt(log(1+2))), 1)
-    i = 1
-    t = 0.0
-    while t < REPLICATION_TIME + 100
-      push!(vector_1[i+1], vector_1[i] + rand(Distributions.LogNormal(log(0.25),sqrt(log(2+1))))  )
-      push!(vector_2[i+1], vector_2[i] + rand(Distributions.LogNormal(log(0.5),sqrt(log(1.5+1))))  )
-      push!(vector_3[i+1], vector_3[i] + rand(Distributions.Exponential(4))  )
-      push!(vector_4[i+1], vector_4[i] + rand(Distributions.LogNormal(log(0.1),0.1*sqrt(log(1+0.8))))  )
-      push!(vector_5[i+1], vector_5[i] + rand(Distributions.LogNormal(log(0.2),0.2*sqrt(log(1+2))))  )
-      i += 1
-      t = min(vector_1[i+1],vector_2[i+1],vector_3[i+1],vector_4[i+1],vector_5[i+1])
-    end
-
-    AI = Arrival_Information[]
-    i = 1
-    while m < REPLICATION_TIME + 1
-      m = min(vector_1[1], vector_2[1], vector_3[1], vector_4[1], vector_5[1])
-      if m == vector_1[1]
-        push!(AI, Arrival_Information(i,1,m,rand(LogNormal(log(5.0),sqrt(log(1+1.5)))),typemax(Float64)))
-        shift!(vector_1)
-      elseif m == vector_2[1]
-        push!(AI, Arrival_Information(i,2,m,rand(LogNormal(log(10.0),sqrt(log(1+2)))),typemax(Float64)))
-        shift!(vector_2)
-      elseif m == vector_3[1]
-        push!(AI, Arrival_Information(i,3,m,rand(LogNormal(log(5.0),sqrt(log(1+1)))),typemax(Float64)))
-        shift!(vector_3)
-      elseif m == vector_4[1]
-        push!(AI, Arrival_Information(i,4,m,rand(LogNormal(log(2.0),sqrt(log(0.8+1)))),typemax(Float64)))
-        shift!(vector_4)
-      else
-        push!(AI, Arrival_Information(i,5,m,rand(LogNormal(log(3.0),sqrt(log(0.5+1)))),typemax(Float64)))
-        shift!(vector_5)
-      end
-      i += 1
-    end
-    return AI
-  end
-
   # 서버별 정보를 생성해서 Server_Setting array를 리턴하는 함수
   function server_setter()
     SS = Server_Setting[]
@@ -541,19 +467,23 @@ module Functions
     #aggreated scv를 먼저 계산
     tempv = Float64[]
     for i in 1:length(WS)
-       push!(tempv, 1/WS[i].mean_workload)
+      push!(tempv,WS[i].mean_inter_arrival)
     end
     μ_min = minimum(tempv)
-    denom = sum(1/WS[i].mean_inter_arrival for i in 1:length(WS))
-    num = sum((1/WS[i].mean_inter_arrival)*(WS[i].std_inter_arrival/WS[i].mean_inter_arrival)^2 for i in 1:length(WS))
+    num = 0.0
+    denom = 0.0
+    for i in 1:length(WS)
+      num += (1/WS[i].mean_inter_arrival)*(WS[i].std_inter_arrival/WS[i].mean_inter_arrival)^2
+      denom += (1/WS[i].mean_inter_arrival)
+    end
     agg_scv = num/denom
 
     #서버 객체 생성 및 초기값 설정
     S = Server[]
     for j in 1:length(SS)
       push!(S, Server(SS[j].x_0, SS[j].x_0, SS[j].p_0, SS[j].p_0))
-      S[j].κ = ((-log(SS[j].ϵ)*max(1,agg_scv))/(μ_min*SS[j].δ))
-      # S[j].κ = 0.0
+      # S[j].κ = (-log(SS[j].ϵ)*max(1,agg_scv))/(μ_min*SS[j].δ)
+      S[j].κ = 0.0
     end
     return S
   end
