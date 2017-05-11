@@ -1,3 +1,6 @@
+# Written by Yongkyu Cho.
+# Reference: A distributed speed scaling and load balancing algorithm for energy efficient data centers, Performance Evaluation
+
 using Distributions, PyPlot, JuMP, Ipopt
 importall Types
 importall Functions
