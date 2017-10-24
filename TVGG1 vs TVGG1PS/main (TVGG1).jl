@@ -1,3 +1,6 @@
+# Written by Yongkyu Cho.
+# Reference: Gerhardt and Nelson (2009), Ma and Whitt (2015)
+
 using Distributions, Roots, QuadGK
 
 # Types
