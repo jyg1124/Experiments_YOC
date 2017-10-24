@@ -1,4 +1,5 @@
 # Written by Yongkyu Cho.
+# This code simulates G(t)/G(t)/1/PS queue under the three service rate controls: RM, SR, PSA.
 
 using Distributions, Roots, QuadGK
 
