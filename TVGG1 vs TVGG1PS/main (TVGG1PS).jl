@@ -160,7 +160,7 @@ function string_to_dist(Distribution::String) # All distributions have mean 1.0.
   elseif Distribution == "Erlang"
     return Erlang(2,1/2)
   elseif Distribution == "Hyperexponential"
-    return Exponential(1.0) # this is temporal
+    return Exponential(1.0) # this is temporary
   end
 end
 
