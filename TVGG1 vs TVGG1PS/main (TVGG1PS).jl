@@ -139,7 +139,7 @@ end
 function inverse_cdf(f::Function, val::Float64) # find inf{t>0: F(t) > val}, f: pdf
   s = 0.0 # integration start point
   t = 0.0 # integration end point
-  temp = 0.0 # temporal integration value (s,t)
+  temp = 0.0 # temporary integration value (s,t)
   sum = 0.0 # whole integration value (0.0,t)
   while sum < val
     temp = QuadGK.quadgk(f,s,t)[1] # compute ∫ s to t
@@ -442,7 +442,7 @@ function next_event(system::TVGG1PS_queue, customer_pool::Array{Customer}, recor
       system.next_virtual_completion_time = inverse_integrated_rate_function(system.TVSS.M, system.sim_time, (Q+1)*system.Virtual_WIP[nvci].remaining_workload)
     end
 
-    # record the number of customer, arrival process, temporal sojourn time
+    # record the number of customer, arrival process, temporary sojourn time
     push!(record.Q, system.number_of_customers)
     push!(record.A, system.customer_arrival_counter)
     push!(record.S, 0.0) # this will be re-recorded when the virtual customer is leaving
