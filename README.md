@@ -1,9 +1,7 @@
 # Experiments
-This messy repository contains some codes written in Julia language for numerical experiments. 
-
-The topics are mainly on advanced queueing theories and some applications of them. 
-
-Some basic machine learning codes are also included. 
 
 References: 
-Papers (Ko, Cho), Analysis of Queues (Gautam), Simulation (Ross), Pattern Recognition and Machine Learning (Bishop)
+1. Papers (Ko, Cho)
+2. Analysis of Queues (Gautam)
+3. Simulation (Ross)
+4. Pattern Recognition and Machine Learning (Bishop)
