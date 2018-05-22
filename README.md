@@ -6,4 +6,5 @@ References:
 - Simulation (Ross)
 - Pattern Recognition and Machine Learning (Bishop)
 
+
 ![](/MachineLearning/GaussianMixtureModel/sample_plot.png)
